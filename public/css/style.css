@@ -9,19 +9,6 @@ h1 {
 	border-bottom: thin solid gray;
 }				
 
-img.vasen {
-	width: 20em;
-	float: left;
-	margin-right: 1%;
-
-}
-
-img.oikea {
-	width: 20em;
-	float: right;
-	margin-left: 1%;
-}
-
 #navigaatio {
 	background-color: white;	
 	border-style: solid; 
