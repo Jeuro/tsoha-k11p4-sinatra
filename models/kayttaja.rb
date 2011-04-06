@@ -14,7 +14,7 @@ class Kayttaja
   property :salasana, String, :required => true
   property :osoite, String, :required => true
   property :puhelin, String
-  property :email, String, :format => :email_address, :required => true
+  property :email, String, :required => true
   
   has n, :hakemukset, 'Hakemus'
 end

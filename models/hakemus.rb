@@ -13,7 +13,8 @@ class Hakemus
   property :luontipvm, DateTime
   property :sisalto, Text
   
-  belongs_to :kayttaja
+  belongs_to :kayttaja, :key => true
+  belongs_to :ilmoitus, :key => true
 end
 
 Hakemus.auto_migrate! unless Hakemus.storage_exists?
