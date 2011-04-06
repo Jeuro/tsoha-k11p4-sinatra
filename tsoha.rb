@@ -15,10 +15,10 @@ require './models/user'
 #	enable :sessions
 #	set :public, File.dirname(__FILE__) + "/public"
 	
-	get '/' do
-#    @esimerkkimuuttuja = "tämä on muuttuja"
-#    @sessiosta_muuttujaan = session[:muuttuja]
-#    @testmodelin_arvot = User.all
+	get '/' do    
+#	@sessiosta_muuttujaan = session[:muuttuja]
+#   @testmodelin_arvot = User.all
+#	@esimerkkimuuttuja = "tämä on muuttuja"
 		erb :index
 	end
   
@@ -38,3 +38,4 @@ require './models/user'
 #		session[:muuttuja] = params[:arvo]
 #		redirect '/'
 #	end
+#end
