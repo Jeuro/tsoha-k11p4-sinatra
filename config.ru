@@ -1,3 +1,3 @@
-require 'tsoha'
+require './tsoha'
 
 run Tsoha

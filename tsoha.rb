@@ -6,11 +6,11 @@ require 'erb'
 
 require './config/init'
 
-require './models/user'
+#require './models/user'
 
 
 
-#class Tsoha < Sinatra::Base
+class Tsoha < Sinatra::Base
 
 #	enable :sessions
 #	set :public, File.dirname(__FILE__) + "/public"
@@ -18,7 +18,7 @@ require './models/user'
 	get '/' do    
 #	@sessiosta_muuttujaan = session[:muuttuja]
 #   @testmodelin_arvot = User.all
-#	@esimerkkimuuttuja = "tämä on muuttuja"
+#	@esimerkkimuuttuja = "tama on muuttuja"
 		erb :index
 	end
   
@@ -38,4 +38,5 @@ require './models/user'
 #		session[:muuttuja] = params[:arvo]
 #		redirect '/'
 #	end
-#end
+	run! if app_file == $0
+end
