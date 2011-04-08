@@ -16,7 +16,7 @@ require './models'
 class Tsoha < Sinatra::Base
 
 #	enable :sessions
-#	set :public, File.dirname(__FILE__) + "/public"
+	set :public, File.dirname(__FILE__) + "/public"
 	
 	get '/' do    
 #	@sessiosta_muuttujaan = session[:muuttuja]
