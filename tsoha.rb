@@ -6,10 +6,11 @@ require 'erb'
 
 require './config/init'
 
-require './models/kayttaja'
-require './models/hakemus'
-require './models/ilmoitus'
+#require './models/kayttaja'
+#require './models/hakemus'
+#require './models/ilmoitus'
 
+require './models'
 
 
 class Tsoha < Sinatra::Base
