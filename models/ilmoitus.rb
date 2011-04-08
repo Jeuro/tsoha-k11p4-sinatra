@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'dm-core'
 require 'dm-migrations'
+require './hakemus'
 
 class Ilmoitus
   include DataMapper::Resource
