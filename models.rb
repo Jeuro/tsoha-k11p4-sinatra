@@ -45,4 +45,4 @@ end
 
 #Kayttaja.auto_migrate! unless Kayttaja.storage_exists?
 #DataMapper.auto_migrate! unless DataMapper.storage_exists?
-DataMapper.auto_update!
+DataMapper.auto_upgrade!
