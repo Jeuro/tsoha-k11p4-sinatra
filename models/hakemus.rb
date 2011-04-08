@@ -2,8 +2,6 @@ require 'rubygems'
 require 'dm-core'
 require 'dm-migrations'
 
-DataMapper.setup(:default, 'sqlite:///tsoha.db')
-
 class Hakemus
   include DataMapper::Resource
   

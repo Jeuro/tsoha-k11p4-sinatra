@@ -3,8 +3,6 @@ require 'dm-core'
 require 'dm-migrations'
 require 'dm-validations'
 
-DataMapper.setup(:default, 'sqlite:///tsoha.db')
-
 class Kayttaja
   include DataMapper::Resource
   
