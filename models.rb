@@ -11,11 +11,12 @@ class Kayttaja
   
   property :id, Serial
   property :nimi, String, :required => true
-  property :hetu, String, :required => true
+  property :tunnus, String, :required => true
   property :salasana, String, :required => true
+  property :salt, String, :required => true  
   property :osoite, String, :required => true
   property :puhelin, String
-  property :email, String, :required => true
+  property :email, String, :required => true, :format => :email_address
   
   has n, :hakemukset, 'Hakemus'
 end
@@ -49,4 +50,5 @@ class Ilmoitus
   has n, :hakemukset, 'Hakemus'
 end
 
+DataMapper.finalize
 DataMapper.auto_upgrade!

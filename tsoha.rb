@@ -5,6 +5,7 @@ require 'sinatra'
 require 'erb'
 require './config/init'
 require './models'
+require 'digest/md5'
 
 
 class Tsoha < Sinatra::Base
@@ -29,7 +30,7 @@ class Tsoha < Sinatra::Base
 	end
 	
 	get '/haku' do
-		if params[:sana]==""
+		if params[:sana] == ""
 			@ilmoitukset = Ilmoitus.all(:paikkakunta.like => params[:kunta])
 		else
 			@ilmoitukset = Ilmoitus.all(:tiedot.like => "%#{params[:sana]}%") + Ilmoitus.all(:otsikko.like => "%#{params[:sana]}%") + Ilmoitus.all(:paikkakunta.like => params[:kunta])
@@ -41,6 +42,27 @@ class Tsoha < Sinatra::Base
 	get '/ilmoitus/:id' do
 		@ilmoitus = Ilmoitus.get(params[:id])
 		erb :ilmoitus
+	end
+	
+	post '/register' do 
+		@error = ""
+		
+		@kayttaja = Kayttaja.create
+		@kayttaja.nimi = params[:nimi]
+		@kayttaja.osoite = params[:osoite]
+		@kayttaja.puhelin = params[:puhelin]
+		@kayttaja.email = params[:email]
+		@kayttaja.tunnus = params[:tunnus]
+		@kayttaja.salt = (0...16).map{65.+(rand(25)).chr}.join
+		@kayttaja.salasana = Digest::MD5.hexdigest(params[:salasana] + @kayttaja.salt)
+		
+		if @kayttaja.save
+			erb :rekisterointi_onnistui		 
+		end
+		
+		#if params[:salasana] == params[:salasana2]
+			
+
 	end
 
 #	get '/sessioon/:arvo' do

@@ -1,6 +1,6 @@
 <h2>Rekisteröidy</h2>
 
-<form>
+<form method="POST" action="/register">
 	<p>Nimi:</p>
 	<p><input type="text" name="nimi"></p>
 	<p>Osoite:</p>
@@ -8,11 +8,13 @@
 	<p>Puhelin:</p>
 	<p><input type="text" name="puhelin"></p>
 	<p>Sähköposti</p>
-	<p><input type="text" name="sahkoposti"></p>	
+	<p><input type="text" name="email"></p>	
 	<p>Käyttäjätunnus:</p>
 	<p><input type="text" name="tunnus"></p>
 	<p>Salasana:</p>
 	<p><input type="password" name="salasana"></p>
-	<p><input type="submit" name="submit" value="Rekisteröidy"></p>
+	<p>Salasana uudelleen:</p>
+	<p><input type="password" name="salasana2"></p>
+	<p><input type="submit" value="Rekisteröidy"></p>
 
 </form>
