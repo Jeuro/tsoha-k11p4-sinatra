@@ -29,8 +29,18 @@ class Tsoha < Sinatra::Base
 	end
 	
 	get '/haku' do
-		@ilmoitukset = Ilmoitus.all(:tiedot.like => "%#{params[:sana]}%") + Ilmoitus.all(:otsikko.like => "%#{params[:sana]}%") + Ilmoitus.all(:paikkakunta => params[:kunta])
+		if params[:sana]==""
+			@ilmoitukset = Ilmoitus.all(:paikkakunta.like => params[:kunta])
+		else
+			@ilmoitukset = Ilmoitus.all(:tiedot.like => "%#{params[:sana]}%") + Ilmoitus.all(:otsikko.like => "%#{params[:sana]}%") + Ilmoitus.all(:paikkakunta.like => params[:kunta])
+		end
+		
 		erb :haku
+	end
+	
+	get '/ilmoitus/:id' do
+		@ilmoitus = Ilmoitus.get(params[:id])
+		erb :ilmoitus
 	end
 
 #	get '/sessioon/:arvo' do
