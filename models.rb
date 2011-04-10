@@ -2,6 +2,7 @@ require 'rubygems'
 require 'dm-core'
 require 'dm-migrations'
 require 'dm-validations'
+require 'dm-timestamps'
 
 class Kayttaja
   include DataMapper::Resource
@@ -35,7 +36,7 @@ class Ilmoitus
   
   property :id, Serial
   property :otsikko, String
-  property :luomispvm, DateTime
+  property :created_at, DateTime
   property :deadline, DateTime
   property :paikkakunta, String
   property :ala, String
