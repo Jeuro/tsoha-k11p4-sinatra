@@ -7,6 +7,8 @@ require 'dm-timestamps'
 class Kayttaja
   include DataMapper::Resource
   
+  storage_names[:default] = "kayttajat"
+  
   property :id, Serial
   property :nimi, String, :required => true
   property :hetu, String, :required => true
@@ -33,6 +35,8 @@ end
 
 class Ilmoitus
   include DataMapper::Resource
+  
+  storage_names[:default] = "ilmoitukset"
   
   property :id, Serial
   property :otsikko, String
