@@ -34,6 +34,7 @@ class Ilmoitus
   include DataMapper::Resource
   
   property :id, Serial
+  property :otsikko, String
   property :luomispvm, DateTime
   property :deadline, DateTime
   property :paikkakunta, String
@@ -43,6 +44,4 @@ class Ilmoitus
   has n, :hakemukset, 'Hakemus'
 end
 
-#Kayttaja.auto_migrate! unless Kayttaja.storage_exists?
-#DataMapper.auto_migrate! unless DataMapper.storage_exists?
 DataMapper.auto_upgrade!

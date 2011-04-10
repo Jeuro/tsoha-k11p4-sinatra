@@ -3,25 +3,16 @@
 require 'rubygems'
 require 'sinatra'
 require 'erb'
-
 require './config/init'
-
-#require './models/kayttaja'
-#require './models/hakemus'
-#require './models/ilmoitus'
-
 require './models'
 
 
 class Tsoha < Sinatra::Base
 
-#	enable :sessions
+	enable :sessions
 	set :public, File.dirname(__FILE__) + "/public"
 	
 	get '/' do    
-#	@sessiosta_muuttujaan = session[:muuttuja]
-#   @testmodelin_arvot = User.all
-#	@esimerkkimuuttuja = "tama on muuttuja"
 		erb :index
 	end
   
@@ -36,10 +27,16 @@ class Tsoha < Sinatra::Base
 	get '/register' do
 		erb :register
 	end
+	
+	get '/haku' do
+		@ilmoitukset = Ilmoitus.all(:tiedot.like => "%#{params[:sana]}%") + Ilmoitus.all(:otsikko.like => "%#{params[:sana]}%") + Ilmoitus.all(:paikkakunta => params[:kunta])
+		erb :haku
+	end
 
 #	get '/sessioon/:arvo' do
 #		session[:muuttuja] = params[:arvo]
 #		redirect '/'
 #	end
+
 	run! if app_file == $0
 end
