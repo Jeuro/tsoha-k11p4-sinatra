@@ -1,3 +1,7 @@
-<% @ilmoitukset.each do |ilmoitus| %>
-<p><a href="/ilmoitus/<%= ilmoitus.id %>"><%= ilmoitus.otsikko %></a></p>
-<% end %>
+<% if @ilmoitukset.empty? %>
+	<p>Ei hakutuloksia</p>
+<% else %>
+	<% @ilmoitukset.each do |ilmoitus| %>
+		<p><a href="/ilmoitus/<%= ilmoitus.id %>"><%= ilmoitus.otsikko %></a></p>
+	<% end %>
+<% end %> 
