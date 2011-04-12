@@ -44,6 +44,10 @@ class Tsoha < Sinatra::Base
 		erb :ilmoitus
 	end
 	
+	get '/hakemuksen_luonti' do
+		erb :hakemuksen_luonti
+	end
+	
 	post '/register' do 
 		@error = ""
 		
