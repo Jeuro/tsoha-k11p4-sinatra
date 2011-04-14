@@ -21,22 +21,22 @@ class Tsoha < Sinatra::Base
 		erb :login
 	end
 	
-	get '/paikat' do
-		erb :paikat
+	get '/paikkahaku' do
+		erb :paikkahaku
 	end
   
 	get '/register' do
 		erb :register
 	end
 	
-	get '/haku' do
+	get '/hakutulokset' do
 		if params[:sana] == ""
 			@ilmoitukset = Ilmoitus.all(:conditions => ['UPPER(paikkakunta) LIKE ?', "%#{params[:kunta]}%".upcase])
 		else
 			@ilmoitukset = Ilmoitus.all(:tiedot.like => "%#{params[:sana]}%") + Ilmoitus.all(:otsikko.like => "%#{params[:sana]}%") + Ilmoitus.all(:conditions => ['UPPER(paikkakunta) LIKE ?', "%#{params[:kunta]}%".upcase])
 		end
 		
-		erb :haku
+		erb :hakutulokset
 	end
 	
 	get '/ilmoitus/:id' do
