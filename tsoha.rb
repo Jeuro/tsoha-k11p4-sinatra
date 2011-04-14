@@ -31,9 +31,9 @@ class Tsoha < Sinatra::Base
 	
 	get '/haku' do
 		if params[:sana] == ""
-			@ilmoitukset = Ilmoitus.all(:paikkakunta.like => params[:kunta])
+			@ilmoitukset = Ilmoitus.all(:conditions => ['UPPER(paikkakunta) LIKE ?', "%#{params[:kunta]}%".upcase])
 		else
-			@ilmoitukset = Ilmoitus.all(:tiedot.like => "%#{params[:sana]}%") + Ilmoitus.all(:otsikko.like => "%#{params[:sana]}%") + Ilmoitus.all(:paikkakunta.like => params[:kunta])
+			@ilmoitukset = Ilmoitus.all(:tiedot.like => "%#{params[:sana]}%") + Ilmoitus.all(:otsikko.like => "%#{params[:sana]}%") + Ilmoitus.all(:conditions => ['UPPER(paikkakunta) LIKE ?', "%#{params[:kunta]}%".upcase])
 		end
 		
 		erb :haku
