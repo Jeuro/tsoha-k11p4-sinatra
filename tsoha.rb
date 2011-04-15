@@ -3,7 +3,6 @@
 require 'rubygems'
 require 'sinatra'
 require 'erb'
-require 'rack-flash'
 
 require './config/init'
 require './models'
@@ -12,7 +11,6 @@ require 'digest/md5'
 
 class Tsoha < Sinatra::Base	
 	enable :sessions
-	use Rack::Flash
 	
 	set :public, File.dirname(__FILE__) + "/public"
 	
