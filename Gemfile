@@ -11,6 +11,5 @@ end
 
 group :development do  
   gem "dm-sqlite-adapter"
-  gem "thin"
   gem "heroku"
 end
