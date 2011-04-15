@@ -3,6 +3,7 @@ source "http://rubygems.org"
 
 gem "sinatra"
 gem "data_mapper"
+gem "nakajima-rack-flash"
 
 group :production do
   gem "dm-postgres-adapter"
