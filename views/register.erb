@@ -1,5 +1,11 @@
 <h2>Rekisteröidy</h2>
 
+<% if @errors %>
+	<% @errors.each do |error| %>		
+		<%= error.first %>
+	<% end %>
+<% end %>
+
 <form method="POST" action="/register">
 	<p>Nimi:</p>
 	<p><input type="text" name="nimi"></p>

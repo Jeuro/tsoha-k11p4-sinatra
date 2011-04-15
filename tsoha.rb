@@ -3,14 +3,17 @@
 require 'rubygems'
 require 'sinatra'
 require 'erb'
+require 'rack-flash'
+
 require './config/init'
 require './models'
 require 'digest/md5'
 
 
-class Tsoha < Sinatra::Base
-
+class Tsoha < Sinatra::Base	
 	enable :sessions
+	use Rack::Flash
+	
 	set :public, File.dirname(__FILE__) + "/public"
 	
 	get '/' do    
@@ -33,7 +36,7 @@ class Tsoha < Sinatra::Base
 		if params[:sana] == ""
 			@ilmoitukset = Ilmoitus.all(:conditions => ['UPPER(paikkakunta) LIKE ?', "%#{params[:kunta]}%".upcase])
 		else
-			@ilmoitukset = Ilmoitus.all(:tiedot.like => "%#{params[:sana]}%") + Ilmoitus.all(:otsikko.like => "%#{params[:sana]}%") & Ilmoitus.all(:conditions => ['UPPER(paikkakunta) LIKE ?', "%#{params[:kunta]}%".upcase])
+			@ilmoitukset = Ilmoitus.all(:conditions => ['UPPER(tiedot) LIKE ?', "%#{params[:sana]}%".upcase]) + Ilmoitus.all(:conditions => ['UPPER(otsikko) LIKE ?', "%#{params[:sana]}%".upcase]) & Ilmoitus.all(:conditions => ['UPPER(paikkakunta) LIKE ?', "%#{params[:kunta]}%".upcase])
 		end
 		
 		erb :hakutulokset
@@ -48,9 +51,7 @@ class Tsoha < Sinatra::Base
 		erb :hakemuksen_luonti
 	end
 	
-	post '/register' do 
-		@error = ""
-		
+	post '/register' do 		
 		@kayttaja = Kayttaja.create
 		@kayttaja.nimi = params[:nimi]
 		@kayttaja.osoite = params[:osoite]
@@ -61,11 +62,12 @@ class Tsoha < Sinatra::Base
 		@kayttaja.salasana = Digest::MD5.hexdigest(params[:salasana] + @kayttaja.salt)
 		
 		if @kayttaja.save
-			erb :rekisterointi_onnistui		 
-		end
-		
-		#if params[:salasana] == params[:salasana2]
+			erb :rekisterointi_onnistui		
+		else
+			@errors = @kayttaja.errors
 			
+			erb :register
+		end	
 
 	end
 

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'rubygems'
 require 'dm-core'
 require 'dm-migrations'
@@ -10,14 +12,25 @@ class Kayttaja
   storage_names[:default] = "kayttajat"
   
   property :id, Serial
-  property :nimi, String, :required => true
-  property :tunnus, String, :required => true
+  property :nimi, String, :required => true, 
+  :messages => {
+	:presence  => 'Nimi on pakollinen.'
+  }
+  property :tunnus, String, :required => true,
+  :messages => {
+	:presence  => 'Käyttäjätunnus on pakollinen.'
+  }
   property :salasana, String, :required => true
   property :salt, String, :required => true  
-  property :osoite, String, :required => true
+  property :osoite, String, :required => true,
+  :messages => {
+	:presence  => 'Osoite on pakollinen.'
+  }
   property :puhelin, String
-  property :email, String, :required => true, :format => :email_address
-  
+  property :email, String, :required => true, :format => :email_address,
+  :messages => {
+	:presence  => 'Email on pakollinen.'
+  }
   has n, :hakemukset, 'Hakemus'
 end
 
