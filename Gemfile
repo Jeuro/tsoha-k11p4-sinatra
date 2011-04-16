@@ -2,6 +2,7 @@
 source "http://rubygems.org"
 
 gem "sinatra"
+gem "rack-flash"
 gem "data_mapper"
 
 group :production do
