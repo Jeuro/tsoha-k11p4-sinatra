@@ -1,5 +1,5 @@
 <h3>Omat hakemukset</h3>
 
-<% session[:kayttaja].hakemukset.each do |hakemus| %>
+<% @kayttaja.hakemukset.each do |hakemus| %>
 	<p><a href="/hakemus/<%= hakemus.id %>"><%= hakemus.ilmoitus.otsikko %></a></p>
 <% end %>

@@ -61,7 +61,7 @@ class Tsoha < Sinatra::Base
 			redirect '/login'
 		else
 			if kayttaja.tarkista_salasana(params[:salasana])
-				session[:kayttaja] = kayttaja
+				session[:kayttaja] = kayttaja.id
 				redirect '/oma_sivu'
 			else
 				flash[:error] = "Anna oikea tunnus ja salasana"
@@ -76,6 +76,8 @@ class Tsoha < Sinatra::Base
 	end
 	
 	get '/oma_sivu' do
+		@kayttaja = Kayttaja.first(:id => session[:kayttaja])
+		
 		if logged_in?
 			erb :oma_sivu
 		else			
@@ -83,8 +85,31 @@ class Tsoha < Sinatra::Base
 		end
 	end
 	
+	get '/kayttajatiedot' do
+		@kayttaja = Kayttaja.first(:id => session[:kayttaja])
+		erb :kayttajatiedot
+	end
+	
+	post '/kayttajatiedot' do		
+		kayttaja = Kayttaja.first(:id => session[:kayttaja])		
+		#kayttaja.nimi = params[:nimi]
+		#kayttaja.osoite = params[:osoite]
+		#kayttaja.puhelin = params[:puhelin]
+		#kayttaja.email = params[:email]
+		
+		if kayttaja.update(:nimi => params[:nimi], :osoite => params[:osoite], :puhelin => params[:puhelin], :email => params[:email])
+			flash[:notice] = "Tiedot päivitetty."
+			redirect '/kayttajatiedot'
+		else
+			flash[:error] = "Tietojen päivitys epäonnistui."
+			redirect '/kayttajatiedot'
+		end
+		
+						
+	end
+	
 	get '/hakemus/:hakemus_id' do
-		@kayttaja = session[:kayttaja]
+		@kayttaja = Kayttaja.first(:id => session[:kayttaja])
 		@hakemus = @kayttaja.hakemukset.first(:id => params[:hakemus_id])
 		
 		erb :hakemus
@@ -99,7 +124,7 @@ class Tsoha < Sinatra::Base
 	post '/hakemuksen_luonti/:ilmoitus_id' do
 		@hakemus = Hakemus.create
 		@hakemus.sisalto = params[:hakemus]
-		@hakemus.kayttaja = session[:kayttaja]
+		@hakemus.kayttaja = Kayttaja.first(:id => session[:kayttaja])
 		@hakemus.ilmoitus = Ilmoitus.first(:id => params[:ilmoitus_id])		
 		
 		if @hakemus.save	
