@@ -1,0 +1,14 @@
+<form method="POST">
+	<h4>Henkilötiedot:</h4>
+	<p><%= session[:kayttaja].nimi %></p>	
+	<p><%= session[:kayttaja].osoite %></p>
+	<p><%= session[:kayttaja].puhelin %></p>
+	<p><%= session[:kayttaja].email %></p>	
+	
+	<h4>Vapaamuotoinen hakemus:</h4>
+	<p><input type="text" name="hakemus"></p>	
+	
+	<p><input type="submit" value="Lähetä"></p>
+</form>
+
+<p><%= flash[:error] %></p>

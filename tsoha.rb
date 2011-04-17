@@ -61,7 +61,7 @@ class Tsoha < Sinatra::Base
 			redirect '/login'
 		else
 			if kayttaja.tarkista_salasana(params[:salasana])
-				session[:kayttaja] = params[:tunnus]
+				session[:kayttaja] = kayttaja
 				redirect '/oma_sivu'
 			else
 				flash[:error] = "Anna oikea tunnus ja salasana"
@@ -83,9 +83,23 @@ class Tsoha < Sinatra::Base
 		end
 	end
 	
-	get '/hakemuksen_luonti' do
+	get '/hakemuksen_luonti/:ilmoitus_id' do
 		if logged_in?
 			erb :hakemuksen_luonti
+		end
+	end
+	
+	post '/hakemuksen_luonti/:ilmoitus_id' do
+		@hakemus = Hakemus.create
+		@hakemus.sisalto = params[:hakemus]
+		@hakemus.kayttaja = session[:kayttaja]
+		@hakemus.ilmoitus = Ilmoitus.first(:id => params[:ilmoitus_id])		
+		
+		if @hakemus.save	
+			redirect '/oma_sivu'
+		else
+			flash[:error] = "Et voi lähettää tyhjää hakemusta."
+			redirect "/hakemuksen_luonti/#{params[:ilmoitus_id]}"
 		end
 	end
 	

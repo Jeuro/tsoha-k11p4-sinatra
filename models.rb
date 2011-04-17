@@ -38,11 +38,7 @@ class Kayttaja
 	end
 	
 	def tarkista_salasana(salasana)
-		if @salasana == Digest::MD5.hexdigest(salasana + @salt)
-			return true
-		else
-			return false
-		end
+		@salasana == Digest::MD5.hexdigest(salasana + @salt)
 	end
 end
 
@@ -52,8 +48,8 @@ class Hakemus
 	storage_names[:default] = "hakemukset"
   
 	property :id, Serial
-	property :luontipvm, DateTime
-	property :sisalto, Text
+	property :created_at, DateTime
+	property :sisalto, Text, :required => true
   
 	belongs_to :kayttaja, :key => true
 	belongs_to :ilmoitus, :key => true
