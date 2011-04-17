@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'erb'
+require 'rack-flash'
 
 require './config/init'
 require './models'
@@ -11,8 +12,15 @@ require 'digest/md5'
 
 class Tsoha < Sinatra::Base	
 	enable :sessions
+	use Rack::Flash
 	
 	set :public, File.dirname(__FILE__) + "/public"
+	
+	helpers do
+		def logged_in?
+			not session[:kayttaja].nil?
+		end
+	end
 	
 	get '/' do    
 		erb :index
@@ -20,6 +28,36 @@ class Tsoha < Sinatra::Base
   
 	get '/login' do
 		erb :login
+	end
+	
+	post '/login' do
+		kayttaja = Kayttaja.tunnista(params[:tunnus])
+		
+		if kayttaja.nil?
+			flash[:error] = "Anna oikea tunnus ja salasana"
+			redirect '/login'
+		else
+			if kayttaja.tarkista_salasana(params[:salasana])
+				session[:kayttaja] = params[:tunnus]
+				redirect '/oma_sivu'
+			else
+				flash[:error] = "Anna oikea tunnus ja salasana"
+				redirect '/login'
+			end			
+		end
+	end	
+	
+	get '/logout' do
+		session[:kayttaja] = nil
+		redirect '/'
+	end
+	
+	get '/oma_sivu' do
+		if logged_in?
+			erb :oma_sivu
+		else			
+			redirect '/login'
+		end
 	end
 	
 	get '/paikkahaku' do
@@ -66,13 +104,8 @@ class Tsoha < Sinatra::Base
 			
 			erb :register
 		end	
-
 	end
-
-#	get '/sessioon/:arvo' do
-#		session[:muuttuja] = params[:arvo]
-#		redirect '/'
-#	end
+	
 
 	run! if app_file == $0
 end
