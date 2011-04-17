@@ -83,6 +83,13 @@ class Tsoha < Sinatra::Base
 		end
 	end
 	
+	get '/hakemus/:hakemus_id' do
+		@kayttaja = session[:kayttaja]
+		@hakemus = @kayttaja.hakemukset.first(:id => params[:hakemus_id])
+		
+		erb :hakemus
+	end
+	
 	get '/hakemuksen_luonti/:ilmoitus_id' do
 		if logged_in?
 			erb :hakemuksen_luonti
