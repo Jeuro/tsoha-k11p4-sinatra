@@ -3,16 +3,15 @@
 <p><%= flash[:error]%></p>
 <p><%= flash[:notice]%></p>
 
-
 <form method="POST">
 	<p>Nimi:</p>
-	<p><input type="text" name="nimi" value=<%= @kayttaja.nimi %>></p>
+	<p><input type="text" name="nimi" value="<%= @kayttaja.nimi %>"></p>
 	<p>Osoite:</p>
-	<p><input type="text" name="osoite" value=<%= @kayttaja.osoite %>></p>
+	<p><input type="text" name="osoite" value="<%= @kayttaja.osoite %>"></p>
 	<p>Puhelin:</p>
-	<p><input type="text" name="puhelin" value=<%= @kayttaja.puhelin %>></p>
+	<p><input type="text" name="puhelin" value="<%= @kayttaja.puhelin %>"></p>
 	<p>Sähköposti</p>
-	<p><input type="text" name="email" value=<%= @kayttaja.email %>></p>	
+	<p><input type="text" name="email" value="<%= @kayttaja.email %>"></p>	
 	
 	<p><input type="submit" value="Tallenna"></p>
 </form>
