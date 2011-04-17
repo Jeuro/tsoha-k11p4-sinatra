@@ -25,6 +25,29 @@ class Tsoha < Sinatra::Base
 	get '/' do    
 		erb :index
 	end
+	
+	get '/register' do
+		erb :register
+	end
+	
+	post '/register' do 		
+		@kayttaja = Kayttaja.create
+		@kayttaja.nimi = params[:nimi]
+		@kayttaja.osoite = params[:osoite]
+		@kayttaja.puhelin = params[:puhelin]
+		@kayttaja.email = params[:email]
+		@kayttaja.tunnus = params[:tunnus]
+		@kayttaja.salt = (0...16).map{65.+(rand(25)).chr}.join
+		@kayttaja.salasana = Digest::MD5.hexdigest(params[:salasana] + @kayttaja.salt)
+		
+		if @kayttaja.save
+			erb :rekisterointi_onnistui		
+		else
+			@errors = @kayttaja.errors
+			
+			erb :register
+		end	
+	end
   
 	get '/login' do
 		erb :login
@@ -60,14 +83,16 @@ class Tsoha < Sinatra::Base
 		end
 	end
 	
+	get '/hakemuksen_luonti' do
+		if logged_in?
+			erb :hakemuksen_luonti
+		end
+	end
+	
 	get '/paikkahaku' do
 		erb :paikkahaku
 	end
-  
-	get '/register' do
-		erb :register
-	end
-	
+		
 	get '/hakutulokset' do
 		if params[:sana] == ""
 			@ilmoitukset = Ilmoitus.all(:conditions => ['UPPER(paikkakunta) LIKE ?', "%#{params[:kunta]}%".upcase])
@@ -81,31 +106,7 @@ class Tsoha < Sinatra::Base
 	get '/ilmoitus/:id' do
 		@ilmoitus = Ilmoitus.get(params[:id])
 		erb :ilmoitus
-	end
-	
-	get '/hakemuksen_luonti' do
-		erb :hakemuksen_luonti
-	end
-	
-	post '/register' do 		
-		@kayttaja = Kayttaja.create
-		@kayttaja.nimi = params[:nimi]
-		@kayttaja.osoite = params[:osoite]
-		@kayttaja.puhelin = params[:puhelin]
-		@kayttaja.email = params[:email]
-		@kayttaja.tunnus = params[:tunnus]
-		@kayttaja.salt = (0...16).map{65.+(rand(25)).chr}.join
-		@kayttaja.salasana = Digest::MD5.hexdigest(params[:salasana] + @kayttaja.salt)
-		
-		if @kayttaja.save
-			erb :rekisterointi_onnistui		
-		else
-			@errors = @kayttaja.errors
-			
-			erb :register
-		end	
-	end
-	
+	end	
 
 	run! if app_file == $0
 end

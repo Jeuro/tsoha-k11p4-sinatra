@@ -11,8 +11,15 @@
 		<div id="navigaatio">
 			<a href="/">Etusivu</a>
 			<a href="/paikkahaku">Avoimet työpaikat</a>			
-			<a href="/register">Rekisteröidy</a>
+			
+			<% if logged_in? %>
+			<a href="/oma_sivu">Oma sivu</a>
+			<a href="/hakemuksen_luonti">Uusi hakemus</a>
+			<a href="/logout">Kirjaudu ulos</a>			
+			<% else %>
 			<a href="/login">Kirjaudu sisään</a>
+			<a href="/register">Rekisteröidy</a>
+			<% end %>			
 		</div>		
 
         <div id="content">
