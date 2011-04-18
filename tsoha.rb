@@ -116,6 +116,7 @@ class Tsoha < Sinatra::Base
 	end
 	
 	get '/hakemuksen_luonti/:ilmoitus_id' do
+		@kayttaja = Kayttaja.first(:id => session[:kayttaja])
 		if logged_in?
 			erb :hakemuksen_luonti
 		end
