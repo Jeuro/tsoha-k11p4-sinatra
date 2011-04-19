@@ -1,4 +1,10 @@
 <h2><%= @ilmoitus.otsikko %></h2>
+<p>Paikkakunta: <%= @ilmoitus.paikkakunta %></p>
+<p>Toimiala: <%= @ilmoitus.ala %></p>
 <p><%= @ilmoitus.tiedot %></p>
-<p><a href="/hakemuksen_luonti/<%= @ilmoitus.id %>">Hae paikkaa</a></p>
 
+<% if session[:kayttaja] %>
+	<p><a href="/hakemuksen_luonti/<%= @ilmoitus.id %>">Hae paikkaa</a></p>
+<% else %>
+	<p><a href="/login">Kirjaudu sisään</a> hakeaksesi paikkaa</p>
+<% end %>

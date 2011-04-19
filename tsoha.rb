@@ -16,7 +16,7 @@ class Tsoha < Sinatra::Base
 	
 	set :public, File.dirname(__FILE__) + "/public"
 	
-	helpers do
+	helpers do		
 		def logged_in?
 			not session[:kayttaja].nil?
 		end
@@ -91,11 +91,7 @@ class Tsoha < Sinatra::Base
 	end
 	
 	post '/kayttajatiedot' do		
-		kayttaja = Kayttaja.first(:id => session[:kayttaja])		
-		#kayttaja.nimi = params[:nimi]
-		#kayttaja.osoite = params[:osoite]
-		#kayttaja.puhelin = params[:puhelin]
-		#kayttaja.email = params[:email]
+		kayttaja = Kayttaja.first(:id => session[:kayttaja])
 		
 		if kayttaja.update(:nimi => params[:nimi], :osoite => params[:osoite], :puhelin => params[:puhelin], :email => params[:email])
 			flash[:notice] = "Tiedot päivitetty."
