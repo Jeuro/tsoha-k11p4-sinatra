@@ -41,7 +41,8 @@ class Tsoha < Sinatra::Base
 		@kayttaja.salasana = Digest::MD5.hexdigest(params[:salasana] + @kayttaja.salt)
 		
 		if @kayttaja.save
-			erb :rekisterointi_onnistui		
+			flash[:notice] = "Rekisteröinti onnistui!"
+			redirect '/'
 		else
 			@errors = @kayttaja.errors
 			

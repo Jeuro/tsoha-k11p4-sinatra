@@ -3,7 +3,7 @@
 <p>Toimiala: <%= @ilmoitus.ala %></p>
 <p><%= @ilmoitus.tiedot %></p>
 
-<% if session[:kayttaja] %>
+<% if logged_in? %>
 	<p><a href="/hakemuksen_luonti/<%= @ilmoitus.id %>">Hae paikkaa</a></p>
 <% else %>
 	<p><a href="/login">Kirjaudu sisään</a> hakeaksesi paikkaa</p>
