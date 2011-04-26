@@ -14,7 +14,8 @@ class Tsoha < Sinatra::Base
 	enable :sessions
 	use Rack::Flash
 	
-	set :public, File.dirname(__FILE__) + "/public"
+	set :public, File.dirname(__FILE__) + "/public"	
+
 	
 	helpers do		
 		def logged_in?
@@ -100,9 +101,7 @@ class Tsoha < Sinatra::Base
 		else
 			flash[:error] = "Tietojen päivitys epäonnistui."
 			redirect '/kayttajatiedot'
-		end
-		
-						
+		end					
 	end
 	
 	get '/hakemus/:hakemus_id' do
@@ -138,10 +137,19 @@ class Tsoha < Sinatra::Base
 	end
 		
 	get '/hakutulokset' do
-		if params[:sana] == ""
-			@ilmoitukset = Ilmoitus.all(:conditions => ['UPPER(paikkakunta) LIKE ?', "%#{params[:kunta]}%".upcase])
-		else
-			@ilmoitukset = Ilmoitus.all(:conditions => ['UPPER(tiedot) LIKE ?', "%#{params[:sana]}%".upcase]) + Ilmoitus.all(:conditions => ['UPPER(otsikko) LIKE ?', "%#{params[:sana]}%".upcase]) & Ilmoitus.all(:conditions => ['UPPER(paikkakunta) LIKE ?', "%#{params[:kunta]}%".upcase])
+		@ilmoitukset = Ilmoitus.all
+		
+		unless params[:kunta].empty?
+			@ilmoitukset = @ilmoitukset.all(:conditions => ['UPPER(paikkakunta) LIKE ?', "%#{params[:kunta]}%".upcase])
+		end
+		
+		unless params[:ala].empty?
+			@ilmoitukset = @ilmoitukset.all(:conditions => ['UPPER(ala) LIKE ?', "%#{params[:ala]}%".upcase])
+		end
+		
+		unless params[:sana].empty?
+			@ilmoitukset = @ilmoitukset.all(:conditions => ['UPPER(tiedot) LIKE ?', "%#{params[:sana]}%".upcase]) + 
+							@ilmoitukset.all(:conditions => ['UPPER(otsikko) LIKE ?', "%#{params[:sana]}%".upcase])
 		end
 		
 		erb :hakutulokset
@@ -152,5 +160,4 @@ class Tsoha < Sinatra::Base
 		erb :ilmoitus
 	end	
 
-	run! if app_file == $0
 end

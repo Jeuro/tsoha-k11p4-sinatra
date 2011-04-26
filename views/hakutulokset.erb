@@ -2,6 +2,6 @@
 	<p>Ei hakutuloksia</p>
 <% else %>
 	<% @ilmoitukset.each do |ilmoitus| %>
-		<p><a href="/ilmoitus/<%= ilmoitus.id %>"><%= ilmoitus.otsikko %></a></p>
+		<p><a href="/ilmoitus/<%= ilmoitus.id %>"><%= ilmoitus.otsikko %>, <%= ilmoitus.paikkakunta %></a></p>
 	<% end %>
 <% end %> 
