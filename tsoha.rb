@@ -9,19 +9,19 @@ require './config/init'
 require './models'
 require 'digest/md5'
 
+module Helpers
+	def logged_in?
+		not session[:kayttaja].nil?
+	end
+end
 
-class Tsoha < Sinatra::Base	
+class Yleinen < Sinatra::Base	
 	enable :sessions
 	use Rack::Flash
 	
-	set :public, File.dirname(__FILE__) + "/public"	
-
+	helpers Helpers
 	
-	helpers do		
-		def logged_in?
-			not session[:kayttaja].nil?
-		end
-	end
+	set :public, File.dirname(__FILE__) + "/public"	
 	
 	get '/' do    
 		erb :index
@@ -45,12 +45,11 @@ class Tsoha < Sinatra::Base
 			flash[:notice] = "Rekisteröinti onnistui!"
 			redirect '/'
 		else
-			@errors = @kayttaja.errors
-			
+			@errors = @kayttaja.errors			
 			erb :register
 		end	
 	end
-  
+	
 	get '/login' do
 		erb :login
 	end
@@ -71,66 +70,6 @@ class Tsoha < Sinatra::Base
 			end			
 		end
 	end	
-	
-	get '/logout' do
-		session[:kayttaja] = nil
-		redirect '/'
-	end
-	
-	get '/oma_sivu' do
-		@kayttaja = Kayttaja.first(:id => session[:kayttaja])
-		
-		if logged_in?
-			erb :oma_sivu
-		else			
-			redirect '/login'
-		end
-	end
-	
-	get '/kayttajatiedot' do
-		@kayttaja = Kayttaja.first(:id => session[:kayttaja])
-		erb :kayttajatiedot
-	end
-	
-	post '/kayttajatiedot' do		
-		kayttaja = Kayttaja.first(:id => session[:kayttaja])
-		
-		if kayttaja.update(:nimi => params[:nimi], :osoite => params[:osoite], :puhelin => params[:puhelin], :email => params[:email])
-			flash[:notice] = "Tiedot päivitetty."
-			redirect '/kayttajatiedot'
-		else
-			flash[:error] = "Tietojen päivitys epäonnistui."
-			redirect '/kayttajatiedot'
-		end					
-	end
-	
-	get '/hakemus/:hakemus_id' do
-		@kayttaja = Kayttaja.first(:id => session[:kayttaja])
-		@hakemus = @kayttaja.hakemukset.first(:id => params[:hakemus_id])
-		
-		erb :hakemus
-	end
-	
-	get '/hakemuksen_luonti/:ilmoitus_id' do
-		@kayttaja = Kayttaja.first(:id => session[:kayttaja])
-		if logged_in?
-			erb :hakemuksen_luonti
-		end
-	end
-	
-	post '/hakemuksen_luonti/:ilmoitus_id' do
-		@hakemus = Hakemus.create
-		@hakemus.sisalto = params[:hakemus]
-		@hakemus.kayttaja = Kayttaja.first(:id => session[:kayttaja])
-		@hakemus.ilmoitus = Ilmoitus.first(:id => params[:ilmoitus_id])		
-		
-		if @hakemus.save	
-			redirect '/oma_sivu'
-		else
-			flash[:error] = "Et voi lähettää tyhjää hakemusta."
-			redirect "/hakemuksen_luonti/#{params[:ilmoitus_id]}"
-		end
-	end
 	
 	get '/paikkahaku' do
 		erb :paikkahaku
@@ -158,6 +97,70 @@ class Tsoha < Sinatra::Base
 	get '/ilmoitus/:id' do
 		@ilmoitus = Ilmoitus.get(params[:id])
 		erb :ilmoitus
-	end	
+	end		
+	
+end
 
+class Kirjautunut < Sinatra::Base
+	helpers Helpers
+	
+	before do
+		unless logged_in?
+			halt "Sinun on <a href='/login'>kirjauduttava sisään</a>."
+		end
+		
+		@kayttaja = Kayttaja.first(:id => session[:kayttaja])	
+	end
+	
+	get '/logout' do
+		session[:kayttaja] = nil
+		redirect '/'
+	end
+	
+	get '/oma_sivu' do			
+		erb :oma_sivu		
+	end
+	
+	get '/kayttajatiedot' do		
+		erb :kayttajatiedot
+	end
+	
+	post '/kayttajatiedot' do		
+		if @kayttaja.update(:nimi => params[:nimi], :osoite => params[:osoite], :puhelin => params[:puhelin], :email => params[:email])
+			flash[:notice] = "Tiedot päivitetty."
+			redirect '/kayttajatiedot'
+		else
+			flash[:error] = "Tietojen päivitys epäonnistui."
+			redirect '/kayttajatiedot'
+		end					
+	end
+	
+	get '/hakemus/:hakemus_id' do		
+		@hakemus = @kayttaja.hakemukset.first(:id => params[:hakemus_id])
+		
+		erb :hakemus
+	end	
+	
+	get '/hakemuksen_luonti/:ilmoitus_id' do				
+		erb :hakemuksen_luonti		
+	end
+	
+	post '/hakemuksen_luonti/:ilmoitus_id' do
+		@hakemus = Hakemus.create
+		@hakemus.sisalto = params[:hakemus]
+		@hakemus.kayttaja = @kayttaja
+		@hakemus.ilmoitus = Ilmoitus.first(:id => params[:ilmoitus_id])		
+		
+		if @hakemus.save	
+			redirect '/oma_sivu'
+		else
+			flash[:error] = "Et voi lähettää tyhjää hakemusta."
+			redirect "/hakemuksen_luonti/#{params[:ilmoitus_id]}"
+		end
+	end
+end
+
+class Tsoha < Sinatra::Base	
+	use Yleinen
+	use Kirjautunut	
 end
