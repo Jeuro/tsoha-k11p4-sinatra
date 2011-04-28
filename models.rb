@@ -30,7 +30,8 @@ class Kayttaja
 	property :puhelin, String
 	property :email, String, :required => true, :format => :email_address,
 		:messages => {
-			:presence  => 'Email on pakollinen.'
+			:presence  => 'Email on pakollinen.',
+			:format => 'Anna email oikeassa muodossa.'
 		}
 		
 	has n, :hakemukset, 'Hakemus'
@@ -41,7 +42,7 @@ class Kayttaja
 	
 	def tarkista_salasana(salasana)
 		@salasana == Digest::MD5.hexdigest(salasana + @salt)
-	end
+	end	
 end
 
 class Hakemus

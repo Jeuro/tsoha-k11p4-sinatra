@@ -31,7 +31,7 @@ class Yleinen < Sinatra::Base
 		erb :register
 	end
 	
-	post '/register' do 		
+	post '/register' do 				
 		@kayttaja = Kayttaja.create
 		@kayttaja.nimi = params[:nimi]
 		@kayttaja.osoite = params[:osoite]
@@ -40,6 +40,16 @@ class Yleinen < Sinatra::Base
 		@kayttaja.tunnus = params[:tunnus]
 		@kayttaja.salt = (0...16).map{65.+(rand(25)).chr}.join
 		@kayttaja.salasana = Digest::MD5.hexdigest(params[:salasana] + @kayttaja.salt)
+		
+		unless params[:salasana].length > 4
+			flash[:error] = "Salasanassa oltava vähintään 5 merkkiä."
+			redirect '/register'
+		end
+		
+		unless params[:salasana] == params[:salasana2]
+			flash[:error] = "Salasanat eivät täsmää."
+			redirect '/register'
+		end
 		
 		if @kayttaja.save
 			flash[:notice] = "Rekisteröinti onnistui!"

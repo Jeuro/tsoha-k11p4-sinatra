@@ -1,5 +1,7 @@
 <h2>Rekisteröidy</h2>
 
+<%= flash[:error] %>
+
 <% if @errors %>
 	<% @errors.each do |error| %>		
 		<%= error.first %>
