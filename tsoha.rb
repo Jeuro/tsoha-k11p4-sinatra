@@ -2,36 +2,37 @@
 
 require 'rubygems'
 require 'sinatra'
-require 'erb'
+require 'erubis'
 require 'rack-flash'
 
 require './config/init'
 require './models'
 require 'digest/md5'
 
-module Helpers
+module Helpers	
 	def logged_in?
 		not session[:kayttaja].nil?
-	end
+	end	
 end
 
 class Yleinen < Sinatra::Base	
 	enable :sessions
 	use Rack::Flash
 	
-	helpers Helpers
+	helpers Helpers		
 	
-	set :public, File.dirname(__FILE__) + "/public"	
+	set :public, File.dirname(__FILE__) + "/public"
+	set :erubis, :escape_html => true
 	
 	get '/' do    
-		erb :index
+		erubis :index
 	end
 	
 	get '/register' do
-		erb :register
+		erubis :register
 	end
 	
-	post '/register' do 				
+	post '/register' do
 		@kayttaja = Kayttaja.create
 		@kayttaja.nimi = params[:nimi]
 		@kayttaja.osoite = params[:osoite]
@@ -56,12 +57,12 @@ class Yleinen < Sinatra::Base
 			redirect '/'
 		else
 			@errors = @kayttaja.errors			
-			erb :register
+			erubis :register
 		end	
 	end
 	
 	get '/login' do
-		erb :login
+		erubis :login
 	end
 	
 	post '/login' do
@@ -82,7 +83,7 @@ class Yleinen < Sinatra::Base
 	end	
 	
 	get '/paikkahaku' do
-		erb :paikkahaku
+		erubis :paikkahaku
 	end
 		
 	get '/hakutulokset' do
@@ -101,18 +102,20 @@ class Yleinen < Sinatra::Base
 							@ilmoitukset.all(:conditions => ['UPPER(otsikko) LIKE ?', "%#{params[:sana]}%".upcase])
 		end
 		
-		erb :hakutulokset
+		erubis :hakutulokset
 	end
 	
 	get '/ilmoitus/:id' do
 		@ilmoitus = Ilmoitus.get(params[:id])
-		erb :ilmoitus
+		erubis :ilmoitus
 	end		
 	
 end
 
 class Kirjautunut < Sinatra::Base
-	helpers Helpers
+	helpers Helpers		
+
+	set :erubis, :escape_html => true
 	
 	before do
 		unless logged_in?
@@ -128,11 +131,11 @@ class Kirjautunut < Sinatra::Base
 	end
 	
 	get '/oma_sivu' do			
-		erb :oma_sivu		
+		erubis :oma_sivu		
 	end
 	
 	get '/kayttajatiedot' do		
-		erb :kayttajatiedot
+		erubis :kayttajatiedot
 	end
 	
 	post '/kayttajatiedot' do		
@@ -148,11 +151,11 @@ class Kirjautunut < Sinatra::Base
 	get '/hakemus/:hakemus_id' do		
 		@hakemus = @kayttaja.hakemukset.first(:id => params[:hakemus_id])
 		
-		erb :hakemus
+		erubis :hakemus
 	end	
 	
 	get '/hakemuksen_luonti/:ilmoitus_id' do				
-		erb :hakemuksen_luonti		
+		erubis :hakemuksen_luonti		
 	end
 	
 	post '/hakemuksen_luonti/:ilmoitus_id' do
