@@ -13,24 +13,26 @@ class Kayttaja
 
 	property :id, Serial
 	property :nimi, String, :required => true, 
-	:messages => {
-		:presence  => 'Nimi on pakollinen.'
-	}
-	property :tunnus, String, :required => true,
-	:messages => {
-		:presence  => 'Käyttäjätunnus on pakollinen.'
-	}
+		:messages => {
+			:presence  => 'Nimi on pakollinen.'
+		}
+	property :tunnus, String, :required => true, :unique => true,
+		:messages => {
+			:presence  => 'Käyttäjätunnus on pakollinen.',
+			:is_unique => 'Käyttäjätunnus on varattu.'
+		}
 	property :salasana, String, :required => true
 	property :salt, String, :required => true  
 	property :osoite, String, :required => true,
-	:messages => {
-		:presence  => 'Osoite on pakollinen.'
-	}
+		:messages => {
+			:presence  => 'Osoite on pakollinen.'
+		}
 	property :puhelin, String
 	property :email, String, :required => true, :format => :email_address,
-	:messages => {
-		:presence  => 'Email on pakollinen.'
-	}
+		:messages => {
+			:presence  => 'Email on pakollinen.'
+		}
+		
 	has n, :hakemukset, 'Hakemus'
   
 	def self.tunnista(tunnus)		
