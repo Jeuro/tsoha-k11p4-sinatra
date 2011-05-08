@@ -33,14 +33,14 @@ class Yleinen < Sinatra::Base
 	end
 	
 	post '/register' do
-		@kayttaja = Kayttaja.create
-		@kayttaja.nimi = params[:nimi]
-		@kayttaja.osoite = params[:osoite]
-		@kayttaja.puhelin = params[:puhelin]
-		@kayttaja.email = params[:email]
-		@kayttaja.tunnus = params[:tunnus]
-		@kayttaja.salt = (0...16).map{65.+(rand(25)).chr}.join
-		@kayttaja.salasana = Digest::MD5.hexdigest(params[:salasana] + @kayttaja.salt)
+		kayttaja = Kayttaja.create
+		kayttaja.nimi = params[:nimi]
+		kayttaja.osoite = params[:osoite]
+		kayttaja.puhelin = params[:puhelin]
+		kayttaja.email = params[:email]
+		kayttaja.tunnus = params[:tunnus]
+		kayttaja.salt = (0...16).map{65.+(rand(25)).chr}.join
+		kayttaja.salasana = Digest::MD5.hexdigest(params[:salasana] + kayttaja.salt)
 		
 		unless params[:salasana].length > 4
 			flash[:error] = "Salasanassa oltava vähintään 5 merkkiä."
@@ -52,11 +52,11 @@ class Yleinen < Sinatra::Base
 			redirect '/register'
 		end
 		
-		if @kayttaja.save
+		if kayttaja.save
 			flash[:notice] = "Rekisteröinti onnistui!"
 			redirect '/'
 		else
-			@errors = @kayttaja.errors			
+			@errors = kayttaja.errors			
 			erubis :register
 		end	
 	end
@@ -98,8 +98,8 @@ class Yleinen < Sinatra::Base
 		end
 		
 		unless params[:sana].empty?
-			@ilmoitukset = @ilmoitukset.all(:conditions => ['UPPER(tiedot) LIKE ?', "%#{params[:sana]}%".upcase]) + 
-							@ilmoitukset.all(:conditions => ['UPPER(otsikko) LIKE ?', "%#{params[:sana]}%".upcase])
+			hakusana = "%#{params[:sana]}%".upcase
+			@ilmoitukset = @ilmoitukset.all(:conditions => ['UPPER(tiedot) LIKE ? OR UPPER(otsikko) LIKE ?', hakusana, hakusana])  					
 		end
 		
 		erubis :hakutulokset
@@ -109,8 +109,8 @@ class Yleinen < Sinatra::Base
 		@ilmoitus = Ilmoitus.get(params[:id])
 		erubis :ilmoitus
 	end		
-	
 end
+	
 
 class Kirjautunut < Sinatra::Base
 	helpers Helpers		
